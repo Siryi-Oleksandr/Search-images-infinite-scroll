@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page title</title>
+    <link rel="stylesheet" href="./sass/index.scss" />
+    <script type="module" src="./index.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <form class="search-form" id="search-form">
+        <input
+          type="text"
+          name="searchQuery"
+          autocomplete="off"
+          placeholder="Search images..."
+        />
+        <button class="search-btn" type="submit">
+          <svg width="25" height="25">
+            <use href="./images/sprite.svg#search"></use>
+          </svg>
+        </button>
+      </form>
+    </header>
+    <div id="home"></div>
+    <div class="gallery"></div>
+
+    <!-- Upright Box -->
+    <div id="back-top">
+      <a href="#home">UP</a>
+    </div>
+    <div id="loading">Loading....</div>
+  </body>
+</html>
