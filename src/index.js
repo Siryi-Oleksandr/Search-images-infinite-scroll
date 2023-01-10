@@ -13,22 +13,20 @@ const imagesServise = new ImagesApiService(); // create new copy of the Class se
 let gallery = new SimpleLightbox('.gallery a'); // SimpleLightbox initialization
 const notify = new NotifyMessage(); // create new copy of the Class NotifyMessage
 
-// ! *******************
+// option  for IntersectionObserver
 const optionsObserver = {
   root: null,
   rootMargin: '350px',
   threshold: 0.25,
 };
 
-const observer = new IntersectionObserver(handleIntersect, optionsObserver);
-const observerLastElem = new IntersectionObserver(
+const observer = new IntersectionObserver(handleIntersect, optionsObserver); // create observer which is watching to last row
+const observerLastElem = new IntersectionObserver( // create observer which is watching to last elem in last page
   handleIntersectLastElem,
   optionsObserver
 );
 
 observer.observe(refs.loader);
-
-// ! *******************
 
 // Set functions
 function onSearch(e) {
@@ -75,7 +73,7 @@ function handleLoadMore(data) {
   // check last page and follow for last item when it intersect viewport and show message
   const isLastPage = imagesServise.page - 1 === Math.ceil(totalHits / perPage);
   if (isLastPage) {
-    observerLastElem.observe(refs.galleryContainer.lastElementChild);
+    observerLastElem.observe(refs.galleryContainer.lastElementChild); //observer which is watching to last elem in last page
   }
 }
 
