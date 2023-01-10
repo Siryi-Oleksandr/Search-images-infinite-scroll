@@ -1,14 +1,3 @@
-export function smoothPageScrolling() {
-  const { height: cardHeight } = document
-    .querySelector('.gallery')
-    .firstElementChild.getBoundingClientRect();
-
-  window.scrollBy({
-    top: cardHeight * 2 - 62,
-    behavior: 'smooth',
-  });
-}
-
 export function up() {
   let t;
   const top = Math.max(
@@ -20,4 +9,16 @@ export function up() {
     t = setTimeout(up, 20);
   } else clearTimeout(t);
   return false;
+}
+
+// If you want use smoothPageScrolling
+function smoothPageScrolling() {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2 - 62,
+    behavior: 'smooth',
+  });
 }

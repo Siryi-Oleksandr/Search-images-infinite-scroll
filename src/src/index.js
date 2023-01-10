@@ -1,12 +1,13 @@
 import { NotifyMessage, errorMessage } from './js/notify';
 import { ImagesApiService, perPage } from './js/search-service';
 import { refs } from './js/refs';
-import { up } from './js/page-scroll';
+import { smoothPageScrolling, up } from './js/page-scroll';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { createMarkupImagesList } from './js/card-markup';
 
 refs.searchForm.addEventListener('submit', onSearch);
+refs.btnLoadMore.addEventListener('click', onLoadMore); // realized this feature too (if you want to use button - change "display: none" in css)
 refs.btnUp.addEventListener('click', up);
 
 const imagesServise = new ImagesApiService(); // create new copy of the Class search-service
@@ -16,6 +17,8 @@ const notify = new NotifyMessage(); // create new copy of the Class NotifyMessag
 // Set functions
 function onSearch(e) {
   e.preventDefault();
+
+  refs.btnLoadMore.classList.add('visually-hidden');
 
   imagesServise.query = e.currentTarget.elements.searchQuery.value;
 
@@ -39,7 +42,7 @@ function handleSearchResult(data) {
   showImagesList(hits);
   notify.showSuccessMessage(`Hooray! We found ${totalHits} images.`);
 
-  // isEndOfPage(totalHits); // check last page and hide button
+  isEndOfPage(totalHits); // check last page and hide button
 
   gallery.refresh(); // Destroys and reinitilized the lightbox
 }
@@ -55,7 +58,9 @@ function handleLoadMore(data) {
   showImagesList(hits);
   gallery.refresh(); // Destroys and reinitilized the lightbox
 
-  // isEndOfPage(totalHits); // check last page and hide button
+  isEndOfPage(totalHits); // check last page and hide button
+
+  smoothPageScrolling(); // add smooth page scrolling (disabled for infinite scroll) this feature actual for button Load More
 }
 
 function showImagesList(images) {
@@ -67,41 +72,19 @@ function clearImagesContainer() {
   refs.galleryContainer.innerHTML = '';
 }
 
-// function isEndOfPage(totalHits) {
-//   const showBtn = imagesServise.page - 1 < Math.ceil(totalHits / perPage);
-//   if (showBtn) {
-//     showElement();
-//   } else {
-//     hideElement();
-//     notify.showInfoMessage();
-//   }
-// }
-
-// function showElement() {
-//   refs.btnLoadMore.classList.remove('visually-hidden');
-// }
-// function hideElement() {
-//   refs.btnLoadMore.classList.add('visually-hidden');
-// }
-
-const options = {
-  root: null,
-  rootMargin: '350px',
-  threshold: 0.25,
-};
-
-function handleIntersect(entries, observer) {
-  entries.forEach(entry => {
-    if (entry.isIntersecting && imagesServise.query) {
-      console.log(imagesServise.query);
-
-      console.log(entry.isIntersecting);
-
-      onLoadMore();
-    }
-  });
+function isEndOfPage(totalHits) {
+  const showBtn = imagesServise.page - 1 < Math.ceil(totalHits / perPage);
+  if (showBtn) {
+    showElement();
+  } else {
+    hideElement();
+    notify.showInfoMessage();
+  }
 }
 
-const observer = new IntersectionObserver(handleIntersect, options);
-
-observer.observe(refs.loader);
+function showElement() {
+  refs.btnLoadMore.classList.remove('visually-hidden');
+}
+function hideElement() {
+  refs.btnLoadMore.classList.add('visually-hidden');
+}

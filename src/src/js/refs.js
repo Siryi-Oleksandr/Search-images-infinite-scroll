@@ -2,6 +2,6 @@ export const refs = {
   searchForm: document.querySelector('#search-form'),
   btnSearch: document.querySelector('[type="submit"]'),
   galleryContainer: document.querySelector('.gallery'),
-  loader: document.querySelector('#loading'),
+  btnLoadMore: document.querySelector('.js-load-more'),
   btnUp: document.querySelector('#back-top'),
 };
