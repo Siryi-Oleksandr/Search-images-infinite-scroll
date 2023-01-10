@@ -1,23 +1,22 @@
-// const loader = document.querySelector('#loading');
+const optionsObserver = {
+  root: null,
+  rootMargin: '350px',
+  threshold: 0.25,
+};
 
-// const options = {
-//   root: null,
-//   rootMargin: '100px',
-//   threshold: 0.25,
-// };
+function handleIntersect(entries, observer) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      onLoadMore();
+    }
+  });
+}
+function handleIntersectLastElem(entries, observer) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      notify.showInfoMessage();
+    }
+  });
+}
 
-// function handleIntersect(entries, observer) {
-//   entries.forEach(entry => {
-//     if (entry.isIntersecting) {
-//       console.log('Hello bro');
-
-//       console.log(entry.isIntersecting);
-
-//       onLoadMore();
-//     }
-//   });
-// }
-
-// const observer = new IntersectionObserver(handleIntersect, options);
-
-// observer.observe(loader);
+export { optionsObserver, handleIntersect, handleIntersectLastElem };

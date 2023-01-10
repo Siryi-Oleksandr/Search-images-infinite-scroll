@@ -13,6 +13,23 @@ const imagesServise = new ImagesApiService(); // create new copy of the Class se
 let gallery = new SimpleLightbox('.gallery a'); // SimpleLightbox initialization
 const notify = new NotifyMessage(); // create new copy of the Class NotifyMessage
 
+// ! *******************
+const optionsObserver = {
+  root: null,
+  rootMargin: '350px',
+  threshold: 0.25,
+};
+
+const observer = new IntersectionObserver(handleIntersect, optionsObserver);
+const observerLastElem = new IntersectionObserver(
+  handleIntersectLastElem,
+  optionsObserver
+);
+
+observer.observe(refs.loader);
+
+// ! *******************
+
 // Set functions
 function onSearch(e) {
   e.preventDefault();
@@ -39,7 +56,7 @@ function handleSearchResult(data) {
   showImagesList(hits);
   notify.showSuccessMessage(`Hooray! We found ${totalHits} images.`);
 
-  // isEndOfPage(totalHits); // check last page and hide button
+  isEndOfPage(totalHits); // check last page and show message
 
   gallery.refresh(); // Destroys and reinitilized the lightbox
 }
@@ -55,7 +72,11 @@ function handleLoadMore(data) {
   showImagesList(hits);
   gallery.refresh(); // Destroys and reinitilized the lightbox
 
-  // isEndOfPage(totalHits); // check last page and hide button
+  // check last page and follow for last item when it intersect viewport and show message
+  const isLastPage = imagesServise.page - 1 === Math.ceil(totalHits / perPage);
+  if (isLastPage) {
+    observerLastElem.observe(refs.galleryContainer.lastElementChild);
+  }
 }
 
 function showImagesList(images) {
@@ -67,41 +88,27 @@ function clearImagesContainer() {
   refs.galleryContainer.innerHTML = '';
 }
 
-// function isEndOfPage(totalHits) {
-//   const showBtn = imagesServise.page - 1 < Math.ceil(totalHits / perPage);
-//   if (showBtn) {
-//     showElement();
-//   } else {
-//     hideElement();
-//     notify.showInfoMessage();
-//   }
-// }
+function isEndOfPage(totalHits) {
+  console.log('page', imagesServise.page);
+  console.log(Math.ceil(totalHits / perPage));
 
-// function showElement() {
-//   refs.btnLoadMore.classList.remove('visually-hidden');
-// }
-// function hideElement() {
-//   refs.btnLoadMore.classList.add('visually-hidden');
-// }
-
-const options = {
-  root: null,
-  rootMargin: '350px',
-  threshold: 0.25,
-};
+  const isLastPage = imagesServise.page - 1 === Math.ceil(totalHits / perPage);
+  if (isLastPage) {
+    notify.showInfoMessage();
+  }
+}
 
 function handleIntersect(entries, observer) {
   entries.forEach(entry => {
     if (entry.isIntersecting && imagesServise.query) {
-      console.log(imagesServise.query);
-
-      console.log(entry.isIntersecting);
-
       onLoadMore();
     }
   });
 }
-
-const observer = new IntersectionObserver(handleIntersect, options);
-
-observer.observe(refs.loader);
+function handleIntersectLastElem(entries, observer) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      notify.showInfoMessage();
+    }
+  });
+}
