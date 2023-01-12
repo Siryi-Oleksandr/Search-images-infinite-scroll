@@ -87,9 +87,6 @@ function clearImagesContainer() {
 }
 
 function isEndOfPage(totalHits) {
-  console.log('page', imagesServise.page);
-  console.log(Math.ceil(totalHits / perPage));
-
   const isLastPage = imagesServise.page - 1 === Math.ceil(totalHits / perPage);
   if (isLastPage) {
     notify.showInfoMessage();
@@ -107,6 +104,7 @@ function handleIntersectLastElem(entries, observer) {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       notify.showInfoMessage();
+      observer.unobserve(refs.loader);
     }
   });
 }
